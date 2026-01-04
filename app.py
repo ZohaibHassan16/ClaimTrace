@@ -19,7 +19,7 @@ class NewsVerifier:
 
         self.processor = Blip2Processor.from_pretrained("Salesforce/blip2-opt-2.7b")
 
-        #  4-BIT QUANTIZATION
+        #  quantizing
         try:
             bnb_config = BitsAndBytesConfig(
                 load_in_4bit=True,
@@ -101,29 +101,21 @@ class NewsVerifier:
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         flags = []
 
-        #  HASH CHECK
+    
         img_hash = str(imagehash.phash(image))
      
         if img_hash in self.known_fakes_db:
             flags.append({"type": "Recycled Media", "severity": "Critical", "details": f"Known fake: {self.known_fakes_db[img_hash]}"})
-
-        # DEEPFAKE CHECK
         ai_prob = self.detect_deepfake(image)
         if ai_prob > 70:
-            flags.append({"type": "⚠️ AI Generated", "severity": "Critical", "details": f"{ai_prob}% probability of being AI."})
+            flags.append({"type": "AI Generated", "severity": "Critical", "details": f"{ai_prob}% probability of being AI."})
 
-        # GENERATE VISUAL EVIDENCE (Direct & Fast)
-        # Call 1: General Scene
         visual_summary = self.ask_vqa(image, "Describe the scene, action, and location in this image.")
 
-
-        # Call 2: Language
         lang_check = self.ask_vqa(image, "What language is written on the signs?")
         if "english" not in lang_check.lower() and len(lang_check) > 3:
              visual_summary += f". Text language appears to be {lang_check}."
              flags.append({"type": "Language Context", "severity": "Info", "details": f"Detected text language: {lang_check}"})
-
-        # SEMANTIC CONSISTENCY CHECK (NLI)
         scores = self.nli_model.predict([(text_caption, visual_summary)])[0]
         contradiction_score = scores[0]
    
@@ -137,8 +129,6 @@ class NewsVerifier:
                 "severity": "Critical",
                 "details": f"Caption claims '{text_caption}', but visual evidence contradicts this (AI saw: '{visual_summary}')."
             })
-
-        # LOCATION CHECK
         claims = self.extract_claims(text_caption)
         if claims["GPE"]:
             for loc in claims["GPE"]:
