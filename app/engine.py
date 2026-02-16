@@ -64,12 +64,12 @@ class NewsVerifier:
         logger.info("All Systems Operational.")
 
     def load_cpu_model(self):
-        """Fallback method for non-GPU environments (Laptops/CI)"""
+        """Fallback method for non-GPU environments"""
         self.device = "cpu"
-        logger.info("Loading standard model on CPU (optimized with bfloat16)...")
+        logger.info("Loading standard model on CPU (optimized)...")
         self.model = Blip2ForConditionalGeneration.from_pretrained(
             "Salesforce/blip2-opt-2.7b", 
-            torch_dtype=torch.bfloat16,  # Memory optimization for 16GB RAM
+            torch_dtype=torch.bfloat16, 
             low_cpu_mem_usage=True
         )
         logger.info("CPU Model Loaded.")
