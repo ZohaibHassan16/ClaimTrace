@@ -16,7 +16,7 @@
         .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card-header { background-color: white; border-bottom: 1px solid #eee; font-weight: 600; border-radius: 12px 12px 0 0 !important; }
 
-        /* ~~~ Authenticity Meter ~~~ */
+    
 
         .meter-container { background: #e9ecef; border-radius: 20px; height: 30px; position: relative; overflow: hidden; }
         .meter-fill { height: 100%; border-radius: 20px; transition: width 1.0s ease-in-out; display: flex; align-items: center; justify-content: flex-end; padding-right: 15px; color: white; font-weight: bold; }
@@ -24,7 +24,7 @@
         .bg-warn { background: linear-gradient(90deg, #fceabb, #f8b500); color: #5d4037; }
         .bg-fake { background: linear-gradient(90deg, #cb2d3e, #ef473a); }
 
-        /* ~~~ Flag Cards ~~~ */
+
         
         .flag-card { border-left: 5px solid; background: white; padding: 15px; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         .flag-critical { border-color: #dc3545; background-color: #fff5f5; }
@@ -190,12 +190,11 @@
                     let cardClass = 'flag-info';
                     let icon = 'fa-info-circle';
 
-                    // setting colors based on severity....
                     
                     if (flag.severity === 'Critical') { cardClass = 'flag-critical'; icon = 'fa-exclamation-triangle'; }
                     else if (flag.severity === 'High') { cardClass = 'flag-high'; icon = 'fa-exclamation-circle'; }
 
-                    // Logic to set icons based on Type...
+        
 
                     if (flag.type.includes('Recycled')) icon = 'fa-recycle';
                     if (flag.type.includes('Location')) icon = 'fa-map-marker-alt';
@@ -210,7 +209,7 @@
                 });
             }
 
-            //  ~~~~ details ~~~
+
 
             document.getElementById('aiCaption').innerText = '"' + data.ai_generated_caption + '"';
             const entContainer = document.getElementById('entitiesList');
